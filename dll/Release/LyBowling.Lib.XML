@@ -150,6 +150,13 @@
             擊倒瓶數
             </summary>
         </member>
+        <member name="M:LyBowling.Lib.Throw.Play(System.Nullable{System.Int32})">
+            <summary>
+            執行丟球
+            </summary>
+            <param name="fall"></param>
+            <returns></returns>
+        </member>
         <member name="F:LyBowling.Lib.Throw.Next">
             <summary>
             下一球
