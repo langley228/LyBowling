@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LyBowling.Lib", "..\src\LyBowling.Lib\LyBowling.Lib.csproj", "{5A137640-2B8F-46B9-A6B7-01D7B69D270D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LyBowling.LibTests", "..\src\LyBowling.LibTests\LyBowling.LibTests.csproj", "{9F9FC34E-3020-408A-BC67-1924EBB8DDCD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LyBowling.WebApp", "..\src\LyBowling.WebApp\LyBowling.WebApp.csproj", "{1F503FCC-36C6-4CEA-B3DB-BAE0E2F363C8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5A137640-2B8F-46B9-A6B7-01D7B69D270D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A137640-2B8F-46B9-A6B7-01D7B69D270D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A137640-2B8F-46B9-A6B7-01D7B69D270D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A137640-2B8F-46B9-A6B7-01D7B69D270D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F9FC34E-3020-408A-BC67-1924EBB8DDCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F9FC34E-3020-408A-BC67-1924EBB8DDCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F9FC34E-3020-408A-BC67-1924EBB8DDCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F9FC34E-3020-408A-BC67-1924EBB8DDCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F503FCC-36C6-4CEA-B3DB-BAE0E2F363C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F503FCC-36C6-4CEA-B3DB-BAE0E2F363C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F503FCC-36C6-4CEA-B3DB-BAE0E2F363C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F503FCC-36C6-4CEA-B3DB-BAE0E2F363C8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
