@@ -20,7 +20,7 @@ namespace LyBowling.Lib.Tests
             {
                 t = t.Play(10);
             }
-            if (g.GetSource() != 300)
+            if (g.Source() != 300)
             {
                 Assert.Fail();
             }
@@ -29,7 +29,7 @@ namespace LyBowling.Lib.Tests
             {
                 t = t.Play(10);
             }
-            if (g.GetSource() != 300)
+            if (g.Source() != 300)
             {
                 Assert.Fail();
             }
@@ -41,30 +41,22 @@ namespace LyBowling.Lib.Tests
         {
             Game g = new Game(10);
             Throw t = g.Start();
-            t = t.Play(1);
-            t = t.Play(4);
-            t = t.Play(4);
-            t = t.Play(5);
-            t = t.Play(6);
-            t = t.Play(4);
-            t = t.Play(5);
-            t = t.Play(5);
+            t = t.Play(1).Play(4);
+            t = t.Play(4).Play(5);
+            t = t.Play(6).Play(4);
+            t = t.Play(5).Play(5);
             t = t.Play(10);
-            t = t.Play(0);
-            t = t.Play(1);
-            t = t.Play(7);
-            t = t.Play(3);
-            t = t.Play(6);
-            t = t.Play(4);
+            t = t.Play(0).Play(1);
+            t = t.Play(7).Play(3);
+            t = t.Play(6).Play(4);
             t = t.Play(10);
-            t = t.Play(2);
-            t = t.Play(8);
-            t = t.Play(6);
-            if (g.GetSource() != 133)
+            t = t.Play(2).Play(8).Play(6);
+            if (g.Source() != 133)
             {
                 Assert.Fail();
             }
         }
+
         [TestMethod()]
         public void GetSource_Sample_113()
         {
@@ -89,7 +81,7 @@ namespace LyBowling.Lib.Tests
             t = t.Play(7);
             t = t.Play(8);
             t = t.Play(10);
-            if (g.GetSource() != 113)
+            if (g.Source() != 113)
                 Assert.Fail();
         }
         [TestMethod()]
@@ -116,7 +108,7 @@ namespace LyBowling.Lib.Tests
             t = t.Play(1);
             t = t.Play(4);
             t = t.Play(0);
-            if (g.GetSource() != 102)
+            if (g.Source() != 102)
                 Assert.Fail();
         }
         [TestMethod()]
@@ -145,7 +137,7 @@ namespace LyBowling.Lib.Tests
             t = t.Play(5);
             t = t.Play(7);
             t = t.Play(7);
-            if (g.GetSource() != 128)
+            if (g.Source() != 128)
                 Assert.Fail();
         }
         [TestMethod()]
@@ -173,7 +165,7 @@ namespace LyBowling.Lib.Tests
             t = t.Play(6);
             t = t.Play(5);
             t = t.Play(6);
-            if (g.GetSource() != 100)
+            if (g.Source() != 100)
                 Assert.Fail();
         }
         [TestMethod()]
@@ -197,7 +189,7 @@ namespace LyBowling.Lib.Tests
             t = t.Play(10);
             t = t.Play(10);
             t = t.Play(10);
-            if (g.GetSource() != 220)
+            if (g.Source() != 220)
                 Assert.Fail();
         }
         [TestMethod()]
@@ -222,7 +214,7 @@ namespace LyBowling.Lib.Tests
             t = t.Play(10);
             t = t.Play(7);
             t = t.Play(7);
-            if (g.GetSource() != 161)
+            if (g.Source() != 161)
                 Assert.Fail();
         }
 
@@ -236,7 +228,7 @@ namespace LyBowling.Lib.Tests
             {
                 t = t.Play(10);
             }
-            if (g.GetSource() != 150)
+            if (g.Source() != 150)
             {
                 Assert.Fail();
             }
@@ -258,7 +250,7 @@ namespace LyBowling.Lib.Tests
             t = t.Play(3);
             t = t.Play(7);
             t = t.Play(4);
-            if (g.GetSource() != 76)
+            if (g.Source() != 76)
             {
                 Assert.Fail();
             }

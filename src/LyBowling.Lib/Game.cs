@@ -71,26 +71,7 @@ namespace LyBowling.Lib
             _Throws[0] = CreateThrow();
             return _Throws[0];
         }
-        /// <summary>
-        /// 此位置是否為最後一球
-        /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
-        private bool IsThrowLast(int index)
-        {
-            return index == _Throws.Length - 1;
-        }
-        /// <summary>
-        /// 是否可以打最後一球
-        /// </summary>
-        /// <returns></returns>
-        private bool HasThrowLast()
-        {
-            int iEnd = _Throws.Length - 1;
-            return _Throws[iEnd - 2].Fall.HasValue &&
-                   _Throws[iEnd - 1].Fall.HasValue &&
-                   _Throws[iEnd - 2].Fall.Value + _Throws[iEnd - 1].Fall.Value >= 10;
-        }
+
         /// <summary>
         /// 略過丟球
         /// </summary>
@@ -128,38 +109,50 @@ namespace LyBowling.Lib
                 int index = newThrow.Index();
                 Throw next = null;
                 index++;
-                if (newThrow != null && !newThrow.IsGameLast())
+                if (newThrow != null && !newThrow.IsLast())
                 {
-                    if (!newThrow.Frame().IsGameLast())
+                    if (newThrow.nextIsSkip())
                     {
-                        if (newThrow.IsFrameFirst() && (newThrow.Fall ?? 0) == 10)
-                        {
-                            _Throws[index] = SkipThrow();
-                            return _Throws[index].Play(null);
-                        }
-                        else if (newThrow.IsFrameFirst())
-                            _Throws[index] = SecondThrow(newThrow);
-                        else
-                            _Throws[index] = CreateThrow();
+                        _Throws[index] = SkipThrow();
+                        return _Throws[index].Play(null);
                     }
+                    else if (newThrow.nextIsSecond())
+                        _Throws[index] = SecondThrow(newThrow);
                     else
-                    {
-                        if (IsThrowLast(index) && !HasThrowLast())
-                        {
-                            _Throws[index] = SkipThrow();
-                            return _Throws[index].Play(null);
-                        }
-                        else if (newThrow.After > 0)
-                            _Throws[index] = SecondThrow(newThrow);
-                        else
-                            _Throws[index] = CreateThrow();
-                    }
+                        _Throws[index] = CreateThrow();
                     next = _Throws[index];
                 }
                 return next;
             };
+            newThrow.nextIsSkip = () =>
+            {
+                int index = newThrow.Index();
+                if (!newThrow.IsLast() &&
+                    ((!newThrow.Frame().IsLast() && newThrow.IsFrameFirst() && (newThrow.Fall ?? 0) == 10)
+                    || (newThrow.Frame().IsLast() && newThrow.nextIsLast() && !newThrow.HasLast())))
+                    return true;
+                else
+                    return false;
+            };
+            newThrow.nextIsSecond = () =>
+            {
+                int index = newThrow.Index();
+                if (!newThrow.IsLast() &&
+                    ((!newThrow.Frame().IsLast() && newThrow.IsFrameFirst())
+                    || (newThrow.Frame().IsLast() && newThrow.After > 0)))
+                    return true;
+                else
+                    return false;
+            };
+            newThrow.nextIsLast = () => { return newThrow.Index() - 1 == (_Throws.Length - 1); };
+            newThrow.HasLast = () => {
+                int iEnd = _Throws.Length - 1;
+                return _Throws[iEnd - 2].Fall.HasValue &&
+                       _Throws[iEnd - 1].Fall.HasValue &&
+                       _Throws[iEnd - 2].Fall.Value + _Throws[iEnd - 1].Fall.Value >= 10;
+            };
             newThrow.Index = () => { return Array.IndexOf(_Throws, newThrow); };
-            newThrow.IsGameLast = () => { return newThrow.Index() == _Throws.Length - 1; };
+            newThrow.IsLast = () => { return newThrow.Index() == _Throws.Length - 1; };
             newThrow.FrameIndex = () =>
             {
                 int index = newThrow.Index() / 2;
@@ -188,7 +181,7 @@ namespace LyBowling.Lib
             };
             newThrow.IsSpare = () =>
             {
-                return !newThrow.IsFrameFirst() && !newThrow.IsGameLast() &&
+                return !newThrow.IsFrameFirst() && !newThrow.IsLast() &&
                       ((_Throws[newThrow.Index() - 1].Fall ?? 0) + (newThrow.Fall ?? 0)) == 10;
             };
             newThrow.Source = () =>
@@ -201,7 +194,7 @@ namespace LyBowling.Lib
                     return 0;
 
                 int source = newThrow.Fall ?? 0;
-                if (!newThrow.Frame().IsGameLast())
+                if (!newThrow.Frame().IsLast())
                 {
                     if (newThrow.IsStrike())
                         source += newThrow.Extra(2);
@@ -258,7 +251,7 @@ namespace LyBowling.Lib
                 return source;
             };
             frame.Index = () => { return Array.IndexOf(_Frames, frame); };
-            frame.IsGameLast = () => { return frame.Index() == _Frames.Length - 1; };
+            frame.IsLast = () => { return frame.Index() == _Frames.Length - 1; };
             return frame;
         }
 
@@ -266,7 +259,7 @@ namespace LyBowling.Lib
         /// 總分
         /// </summary>
         /// <returns></returns>
-        public int GetSource()
+        public int Source()
         {
             int source = 0;
             for (int i = 0; i < _Frames.Length; i++)
@@ -282,7 +275,7 @@ namespace LyBowling.Lib
         /// 計分格
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Frame> GetFrames()
+        public IEnumerable<Frame> Frames()
         {
             return _Frames;
         }

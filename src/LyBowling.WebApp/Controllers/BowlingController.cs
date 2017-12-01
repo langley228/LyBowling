@@ -52,7 +52,7 @@ namespace LyBowling.WebApp.Controllers
             if (game == null)
                 game = new Game(10);
             vm = new GameVM();
-            vm.Frames = game.GetFrames();
+            vm.Frames = game.Frames();
             vm.Current = current;
             vm.FrameCount = game.FrameCount;
             base.OnActionExecuting(filterContext);

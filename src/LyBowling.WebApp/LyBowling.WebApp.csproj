@@ -104,6 +104,8 @@
     <Content Include="Global.asax" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <None Include="Properties\PublishProfiles\djWeb - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\djWeb - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\LustertechBowling - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\LustertechBowling - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />

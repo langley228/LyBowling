@@ -81,7 +81,7 @@ namespace LyBowling.Lib
         /// <summary>
         /// 是否為最後一球
         /// </summary>
-        public Func<bool> IsGameLast;
+        public Func<bool> IsLast;
 
         /// <summary>
         /// 分數
@@ -91,5 +91,25 @@ namespace LyBowling.Lib
         /// 附加分數
         /// </summary>
         public Func<int, int> Extra;
+
+        /// <summary>
+        /// 下一球 是否不需打 
+        /// </summary>
+        public Func<bool> nextIsSkip;
+
+        /// <summary>
+        /// 下一球 是否為第二球
+        /// </summary>
+        public Func<bool> nextIsSecond;
+
+        /// <summary>
+        /// 下一球 是否不需打 
+        /// </summary>
+        public Func<bool> nextIsLast;
+
+        /// <summary>
+        /// 是否有最後一球 
+        /// </summary>
+        public Func<bool> HasLast;
     }
 }
