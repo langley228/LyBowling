@@ -31,6 +31,19 @@ namespace LyBowling.Lib
         {
             _Throws = new Throw[_FrameCount * 2 + 1];
             _Frames = new Frame[_FrameCount];
+            Frames = () => _Frames;
+            Source = () =>
+            {
+                int source = 0;
+                for (int i = 0; i < _Frames.Length; i++)
+                {
+                    if (_Frames[i] == null)
+                        _Frames[i] = CreateFrame(i);
+                    source += _Frames[i].Source();
+                    //Console.WriteLine(source.ToString());
+                }
+                return source;
+            };
         }
         /// <summary>
         /// 計分格數量
@@ -124,35 +137,17 @@ namespace LyBowling.Lib
                 }
                 return next;
             };
-            newThrow.nextIsSkip = () =>
-            {
-                int index = newThrow.Index();
-                if (!newThrow.IsLast() &&
-                    ((!newThrow.Frame().IsLast() && newThrow.IsFrameFirst() && (newThrow.Fall ?? 0) == 10)
-                    || (newThrow.Frame().IsLast() && newThrow.nextIsLast() && !newThrow.HasLast())))
-                    return true;
-                else
-                    return false;
-            };
-            newThrow.nextIsSecond = () =>
-            {
-                int index = newThrow.Index();
-                if (!newThrow.IsLast() &&
-                    ((!newThrow.Frame().IsLast() && newThrow.IsFrameFirst())
-                    || (newThrow.Frame().IsLast() && newThrow.After > 0)))
-                    return true;
-                else
-                    return false;
-            };
-            newThrow.nextIsLast = () => { return newThrow.Index() - 1 == (_Throws.Length - 1); };
-            newThrow.HasLast = () => {
-                int iEnd = _Throws.Length - 1;
-                return _Throws[iEnd - 2].Fall.HasValue &&
-                       _Throws[iEnd - 1].Fall.HasValue &&
-                       _Throws[iEnd - 2].Fall.Value + _Throws[iEnd - 1].Fall.Value >= 10;
-            };
-            newThrow.Index = () => { return Array.IndexOf(_Throws, newThrow); };
-            newThrow.IsLast = () => { return newThrow.Index() == _Throws.Length - 1; };
+            newThrow.nextIsSkip = () => !newThrow.IsLast() &&
+                                        ((!newThrow.Frame().IsLast() && newThrow.IsFrameFirst() && (newThrow.Fall ?? 0) == 10)
+                                        || (newThrow.Frame().IsLast() && newThrow.nextIsLast() && !newThrow.HasLast()));
+            newThrow.nextIsSecond = () => !newThrow.IsLast() &&
+                                        ((!newThrow.Frame().IsLast() && newThrow.IsFrameFirst())
+                                        || (newThrow.Frame().IsLast() && newThrow.After > 0));
+            newThrow.nextIsLast = () => newThrow.Index() - 1 == (_Throws.Length - 1);
+            newThrow.HasLast = () => (_Throws[_Throws.Length - 1 - 1].Fall.HasValue &&
+                       _Throws[_Throws.Length - 1 - 2].Fall.Value + _Throws[_Throws.Length - 1 - 1].Fall.Value >= 10);
+            newThrow.Index = () => Array.IndexOf(_Throws, newThrow);
+            newThrow.IsLast = () => newThrow.Index() == _Throws.Length - 1;
             newThrow.FrameIndex = () =>
             {
                 int index = newThrow.Index() / 2;
@@ -167,23 +162,10 @@ namespace LyBowling.Lib
                     _Frames[index] = CreateFrame(index);
                 return _Frames[index];
             };
-            newThrow.IsFrameFirst = () =>
-            {
-                int index = newThrow.Index();
-                if (index < _Throws.Length - 1 && (index + 1) % 2 == 1)
-                    return true;
-                else
-                    return false;
-            };
-            newThrow.IsStrike = () =>
-            {
-                return newThrow.IsFrameFirst() && newThrow.Fall.HasValue && newThrow.Fall.Value == 10;
-            };
-            newThrow.IsSpare = () =>
-            {
-                return !newThrow.IsFrameFirst() && !newThrow.IsLast() &&
-                      ((_Throws[newThrow.Index() - 1].Fall ?? 0) + (newThrow.Fall ?? 0)) == 10;
-            };
+            newThrow.IsFrameFirst = () => newThrow.Index() < _Throws.Length - 1 && (newThrow.Index() + 1) % 2 == 1;
+            newThrow.IsStrike = () => newThrow.IsFrameFirst() && newThrow.Fall.HasValue && newThrow.Fall.Value == 10;
+            newThrow.IsSpare = () => !newThrow.IsFrameFirst() && !newThrow.IsLast() &&
+                                        ((_Throws[newThrow.Index() - 1].Fall ?? 0) + (newThrow.Fall ?? 0)) == 10;
             newThrow.Source = () =>
             {
 
@@ -250,34 +232,19 @@ namespace LyBowling.Lib
                 }
                 return source;
             };
-            frame.Index = () => { return Array.IndexOf(_Frames, frame); };
-            frame.IsLast = () => { return frame.Index() == _Frames.Length - 1; };
+            frame.Index = () => Array.IndexOf(_Frames, frame);
+            frame.IsLast = () => frame.Index() == _Frames.Length - 1;
             return frame;
         }
 
         /// <summary>
         /// 總分
         /// </summary>
-        /// <returns></returns>
-        public int Source()
-        {
-            int source = 0;
-            for (int i = 0; i < _Frames.Length; i++)
-            {
-                if (_Frames[i] == null)
-                    _Frames[i] = CreateFrame(i);
-                source += _Frames[i].Source();
-                //Console.WriteLine(source.ToString());
-            }
-            return source;
-        }
+        public Func<int> Source;
+
         /// <summary>
-        /// 計分格
+        /// 計分格 
         /// </summary>
-        /// <returns></returns>
-        public IEnumerable<Frame> Frames()
-        {
-            return _Frames;
-        }
+        public Func<IEnumerable<Frame>> Frames;
     }
 }

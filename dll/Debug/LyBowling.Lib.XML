@@ -100,17 +100,15 @@
             <param name="index"></param>
             <returns></returns>
         </member>
-        <member name="M:LyBowling.Lib.Game.Source">
+        <member name="F:LyBowling.Lib.Game.Source">
             <summary>
             總分
             </summary>
-            <returns></returns>
         </member>
-        <member name="M:LyBowling.Lib.Game.Frames">
+        <member name="F:LyBowling.Lib.Game.Frames">
             <summary>
-            計分格
+            計分格 
             </summary>
-            <returns></returns>
         </member>
         <member name="T:LyBowling.Lib.Throw">
             <summary>
