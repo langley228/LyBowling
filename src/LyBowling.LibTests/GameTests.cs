@@ -12,6 +12,39 @@ namespace LyBowling.Lib.Tests
     public class GameTests
     {
         [TestMethod()]
+        public void GetSource_Strike()
+        {
+            Game g = new Game(10);
+            Throw t1 = g.Start();
+            Throw t2 = t1.Play(10);
+            if (!t1.IsStrike())
+                Assert.Fail();
+            if (!g.Throw(1).IsSkip())
+                Assert.Fail();
+            if (!t2.IsFirst())
+                Assert.Fail();
+        }
+        [TestMethod()]
+        public void GetSource_LastSkip()
+        {
+            Game g = new Game(10);
+            Throw t = g.Start();
+            for (int i = 0; i < 9; i++)
+            {
+                t = t.Play(10);
+            }
+            Throw t1 = t.Play(9);
+            Throw t2 = t1.Play(0);
+            if (t2!=null)
+            {
+                Assert.Fail();
+            }
+            if (!g.Throw(20).IsSkip())
+            {
+                Assert.Fail();
+            }
+        }
+        [TestMethod()]
         public void GetSource_300()
         {
             Game g = new Game(10);

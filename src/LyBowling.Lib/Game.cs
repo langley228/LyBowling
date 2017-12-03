@@ -32,18 +32,9 @@ namespace LyBowling.Lib
             _Throws = new Throw[_FrameCount * 2 + 1];
             _Frames = new Frame[_FrameCount];
             Frames = () => _Frames;
-            Source = () =>
-            {
-                int source = 0;
-                for (int i = 0; i < _Frames.Length; i++)
-                {
-                    if (_Frames[i] == null)
-                        _Frames[i] = CreateFrame(i);
-                    source += _Frames[i].Source();
-                    //Console.WriteLine(source.ToString());
-                }
-                return source;
-            };
+            Source = () => _Frames.Where(m => m != null).Sum(m => m.Source());
+            Frame = (index) => _Frames.ElementAtOrDefault(index);
+            Throw = (index) => _Throws.ElementAtOrDefault(index);
         }
         /// <summary>
         /// 計分格數量
@@ -85,30 +76,6 @@ namespace LyBowling.Lib
             return _Throws[0];
         }
 
-        /// <summary>
-        /// 略過丟球
-        /// </summary>
-        /// <returns></returns>
-        private Throw SkipThrow()
-        {
-            Throw skip = CreateThrow();
-            skip.After = 0;
-            skip.Before = 0;
-            return skip;
-        }
-
-        /// <summary>
-        /// 第二次丟球
-        /// </summary>
-        /// <param name="pre"></param>
-        /// <returns></returns>
-        private Throw SecondThrow(Throw pre)
-        {
-            Throw second = CreateThrow();
-            second.After = pre.After;
-            second.Before = pre.After;
-            return second;
-        }
 
         /// <summary>
         /// 產生新的丟球
@@ -117,77 +84,78 @@ namespace LyBowling.Lib
         private Throw CreateThrow()
         {
             Throw newThrow = new Throw();
-            newThrow.Next = () =>
-            {
-                int index = newThrow.Index();
-                Throw next = null;
-                index++;
-                if (newThrow != null && !newThrow.IsLast())
-                {
-                    if (newThrow.nextIsSkip())
-                    {
-                        _Throws[index] = SkipThrow();
-                        return _Throws[index].Play(null);
-                    }
-                    else if (newThrow.nextIsSecond())
-                        _Throws[index] = SecondThrow(newThrow);
-                    else
-                        _Throws[index] = CreateThrow();
-                    next = _Throws[index];
-                }
-                return next;
-            };
-            newThrow.nextIsSkip = () => !newThrow.IsLast() &&
-                                        ((!newThrow.Frame().IsLast() && newThrow.IsFrameFirst() && (newThrow.Fall ?? 0) == 10)
-                                        || (newThrow.Frame().IsLast() && newThrow.nextIsLast() && !newThrow.HasLast()));
-            newThrow.nextIsSecond = () => !newThrow.IsLast() &&
-                                        ((!newThrow.Frame().IsLast() && newThrow.IsFrameFirst())
-                                        || (newThrow.Frame().IsLast() && newThrow.After > 0));
-            newThrow.nextIsLast = () => newThrow.Index() - 1 == (_Throws.Length - 1);
-            newThrow.HasLast = () => (_Throws[_Throws.Length - 1 - 1].Fall.HasValue &&
-                       _Throws[_Throws.Length - 1 - 2].Fall.Value + _Throws[_Throws.Length - 1 - 1].Fall.Value >= 10);
             newThrow.Index = () => Array.IndexOf(_Throws, newThrow);
-            newThrow.IsLast = () => newThrow.Index() == _Throws.Length - 1;
-            newThrow.FrameIndex = () =>
+            newThrow.Frame = () =>
             {
                 int index = newThrow.Index() / 2;
                 if (index > _Frames.Length - 1)
                     index = _Frames.Length - 1;
-                return index;
-            };
-            newThrow.Frame = () =>
-            {
-                int index = newThrow.FrameIndex();
                 if (_Frames[index] == null)
                     _Frames[index] = CreateFrame(index);
                 return _Frames[index];
             };
-            newThrow.IsFrameFirst = () => newThrow.Index() < _Throws.Length - 1 && (newThrow.Index() + 1) % 2 == 1;
-            newThrow.IsStrike = () => newThrow.IsFrameFirst() && newThrow.Fall.HasValue && newThrow.Fall.Value == 10;
-            newThrow.IsSpare = () => !newThrow.IsFrameFirst() && !newThrow.IsLast() &&
-                                        ((_Throws[newThrow.Index() - 1].Fall ?? 0) + (newThrow.Fall ?? 0)) == 10;
+            newThrow.Previous = () => Throw(newThrow.Index() - 1);
+            newThrow.Next = () => Throw(newThrow.Index() + 1);
+            newThrow.IsSkip = () => (!newThrow.Frame().IsLast() && newThrow.Previous().IsStrike()) ||
+                                        (newThrow.IsLast() && newThrow.Frame().Fall() < 10);
+            newThrow.IsLast = () => newThrow.Index() == _Throws.Length - 1;
+            newThrow.IsFirst = () => !newThrow.IsThree() && (newThrow.Index() + 1) % 2 == 1;
+            newThrow.IsSecond = () => !newThrow.IsThree() && (newThrow.Index() + 1) % 2 == 0;
+            newThrow.IsThree = () => newThrow.Index() == _Throws.Length - 1;
+            newThrow.IsStrike = () => newThrow.IsFirst() && newThrow.Fall.HasValue && newThrow.Fall.Value == 10;
+            newThrow.IsSpare = () => newThrow.IsSecond() && !newThrow.Previous().IsStrike() && ((newThrow.Previous().Fall ?? 0) + (newThrow.Fall ?? 0)) == 10;
+            newThrow.Play = (fall) =>
+            {
+                newThrow.Fall = fall;
+                if (fall.HasValue)
+                    newThrow.After = newThrow.Before - fall.Value;
+
+                int index = newThrow.Index();
+                Throw next = null;
+                index++;
+                if (!newThrow.IsLast())
+                {
+                    _Throws[index] = CreateThrow();
+                    next = _Throws[index];
+                    if (next.IsSkip())
+                        next = next.Skip();
+                    else
+                        next.Start();
+                }
+                return next;
+            };
+            newThrow.Skip = () =>
+            {
+                newThrow.After = 0;
+                newThrow.Before = 0;
+                return newThrow.Play(null);
+            };
+            newThrow.Start = () =>
+            {
+                if (newThrow.IsSecond() || (newThrow.IsLast() && newThrow.Previous().After == 0))
+                {
+                    newThrow.After = newThrow.Previous().After;
+                    newThrow.Before = newThrow.Previous().After;
+                }
+            };
             newThrow.Source = () =>
             {
-
-                if (newThrow == null)
-                    return 0;
-
                 if (!newThrow.Fall.HasValue)
                     return 0;
 
                 int source = newThrow.Fall ?? 0;
-                if (!newThrow.Frame().IsLast())
-                {
-                    if (newThrow.IsStrike())
-                        source += newThrow.Extra(2);
-                    else if (newThrow.IsSpare())
-                        source += newThrow.Extra(1);
 
-                }
+                if (newThrow.IsStrike())
+                    source += newThrow.Extra(2);
+                else if (newThrow.IsSpare())
+                    source += newThrow.Extra(1);
+
                 return source;
             };
             newThrow.Extra = (iCount) =>
             {
+                if (newThrow.Frame().IsLast())
+                    return 0;
                 int source = 0;
                 int index = newThrow.Index();
                 for (int i = index + 1; i < _Throws.Length; i++)
@@ -233,6 +201,7 @@ namespace LyBowling.Lib
                 return source;
             };
             frame.Index = () => Array.IndexOf(_Frames, frame);
+            frame.Fall = () => frame.Throws().Sum(m => m?.Fall ?? 0);
             frame.IsLast = () => frame.Index() == _Frames.Length - 1;
             return frame;
         }
@@ -243,8 +212,17 @@ namespace LyBowling.Lib
         public Func<int> Source;
 
         /// <summary>
-        /// 計分格 
+        /// 所有計分格 
         /// </summary>
         public Func<IEnumerable<Frame>> Frames;
+
+        /// <summary>
+        /// 某個計分格
+        /// </summary>
+        public Func<int, Frame> Frame;
+        /// <summary>
+        /// 
+        /// </summary>
+        public Func<int, Throw> Throw;
     }
 }

@@ -34,6 +34,11 @@
             是否為最後一計分格
             </summary>
         </member>
+        <member name="F:LyBowling.Lib.Frame.Fall">
+            <summary>
+            擊倒瓶數
+            </summary>
+        </member>
         <member name="T:LyBowling.Lib.Game">
             <summary>
             保齡球Game
@@ -74,19 +79,6 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:LyBowling.Lib.Game.SkipThrow">
-            <summary>
-            略過丟球
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:LyBowling.Lib.Game.SecondThrow(LyBowling.Lib.Throw)">
-            <summary>
-            第二次丟球
-            </summary>
-            <param name="pre"></param>
-            <returns></returns>
-        </member>
         <member name="M:LyBowling.Lib.Game.CreateThrow">
             <summary>
             產生新的丟球
@@ -107,7 +99,17 @@
         </member>
         <member name="F:LyBowling.Lib.Game.Frames">
             <summary>
-            計分格 
+            所有計分格 
+            </summary>
+        </member>
+        <member name="F:LyBowling.Lib.Game.Frame">
+            <summary>
+            某個計分格
+            </summary>
+        </member>
+        <member name="F:LyBowling.Lib.Game.Throw">
+            <summary>
+            
             </summary>
         </member>
         <member name="T:LyBowling.Lib.Throw">
@@ -135,12 +137,25 @@
             擊倒瓶數
             </summary>
         </member>
-        <member name="M:LyBowling.Lib.Throw.Play(System.Nullable{System.Int32})">
+        <member name="F:LyBowling.Lib.Throw.Play">
             <summary>
             執行丟球
             </summary>
-            <param name="fall"></param>
-            <returns></returns>
+        </member>
+        <member name="F:LyBowling.Lib.Throw.Skip">
+            <summary>
+            略過丟球
+            </summary>
+        </member>
+        <member name="F:LyBowling.Lib.Throw.Start">
+            <summary>
+            開始丟球
+            </summary>
+        </member>
+        <member name="F:LyBowling.Lib.Throw.Previous">
+            <summary>
+            上一球
+            </summary>
         </member>
         <member name="F:LyBowling.Lib.Throw.Next">
             <summary>
@@ -150,11 +165,6 @@
         <member name="F:LyBowling.Lib.Throw.Index">
             <summary>
             位置
-            </summary>
-        </member>
-        <member name="F:LyBowling.Lib.Throw.FrameIndex">
-            <summary>
-            隸屬計分格的位置
             </summary>
         </member>
         <member name="F:LyBowling.Lib.Throw.Frame">
@@ -172,14 +182,29 @@
             是否為Spare
             </summary>
         </member>
-        <member name="F:LyBowling.Lib.Throw.IsFrameFirst">
+        <member name="F:LyBowling.Lib.Throw.IsFirst">
             <summary>
             是否為計分格第一球
+            </summary>
+        </member>
+        <member name="F:LyBowling.Lib.Throw.IsSecond">
+            <summary>
+            是否為計分格第二球
+            </summary>
+        </member>
+        <member name="F:LyBowling.Lib.Throw.IsThree">
+            <summary>
+            是否為計分格第三球
             </summary>
         </member>
         <member name="F:LyBowling.Lib.Throw.IsLast">
             <summary>
             是否為最後一球
+            </summary>
+        </member>
+        <member name="F:LyBowling.Lib.Throw.IsSkip">
+            <summary>
+            是否略過此球 
             </summary>
         </member>
         <member name="F:LyBowling.Lib.Throw.Source">
@@ -190,26 +215,6 @@
         <member name="F:LyBowling.Lib.Throw.Extra">
             <summary>
             附加分數
-            </summary>
-        </member>
-        <member name="F:LyBowling.Lib.Throw.nextIsSkip">
-            <summary>
-            下一球 是否不需打 
-            </summary>
-        </member>
-        <member name="F:LyBowling.Lib.Throw.nextIsSecond">
-            <summary>
-            下一球 是否為第二球
-            </summary>
-        </member>
-        <member name="F:LyBowling.Lib.Throw.nextIsLast">
-            <summary>
-            下一球 是否不需打 
-            </summary>
-        </member>
-        <member name="F:LyBowling.Lib.Throw.HasLast">
-            <summary>
-            是否有最後一球 
             </summary>
         </member>
     </members>

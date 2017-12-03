@@ -28,35 +28,35 @@ namespace LyBowling.Lib
         /// 擊倒瓶數
         /// </summary>
         public int? Fall { get; set; }
-
+        
         /// <summary>
         /// 執行丟球
         /// </summary>
-        /// <param name="fall"></param>
-        /// <returns></returns>
-        public Throw Play(int? fall)
-        {
-            this.Fall = fall;
-            if (fall.HasValue)
-                After = Before - fall.Value;
-            return Next();
-        }
+        public Func<int? ,Throw> Play;
 
+        /// <summary>
+        /// 略過丟球
+        /// </summary>
+        public Func<Throw> Skip;
+
+        /// <summary>
+        /// 開始丟球
+        /// </summary>
+        public Action Start;
+
+        /// <summary>
+        /// 上一球
+        /// </summary>
+        public Func<Throw> Previous;
         /// <summary>
         /// 下一球
         /// </summary>
         public Func<Throw> Next;
 
-
         /// <summary>
         /// 位置
         /// </summary>
         public Func<int> Index;
-
-        /// <summary>
-        /// 隸屬計分格的位置
-        /// </summary>
-        public Func<int> FrameIndex;
 
         /// <summary>
         /// 計分格
@@ -76,12 +76,26 @@ namespace LyBowling.Lib
         /// <summary>
         /// 是否為計分格第一球
         /// </summary>
-        public Func<bool> IsFrameFirst;
+        public Func<bool> IsFirst;
+        /// <summary>
+        /// 是否為計分格第二球
+        /// </summary>
+        public Func<bool> IsSecond;
+
+        /// <summary>
+        /// 是否為計分格第三球
+        /// </summary>
+        public Func<bool> IsThree;
 
         /// <summary>
         /// 是否為最後一球
         /// </summary>
         public Func<bool> IsLast;
+
+        /// <summary>
+        /// 是否略過此球 
+        /// </summary>
+        public Func<bool> IsSkip;
 
         /// <summary>
         /// 分數
@@ -91,25 +105,6 @@ namespace LyBowling.Lib
         /// 附加分數
         /// </summary>
         public Func<int, int> Extra;
-
-        /// <summary>
-        /// 下一球 是否不需打 
-        /// </summary>
-        public Func<bool> nextIsSkip;
-
-        /// <summary>
-        /// 下一球 是否為第二球
-        /// </summary>
-        public Func<bool> nextIsSecond;
-
-        /// <summary>
-        /// 下一球 是否不需打 
-        /// </summary>
-        public Func<bool> nextIsLast;
-
-        /// <summary>
-        /// 是否有最後一球 
-        /// </summary>
-        public Func<bool> HasLast;
+        
     }
 }

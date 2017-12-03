@@ -35,5 +35,11 @@ namespace LyBowling.Lib
         /// 是否為最後一計分格
         /// </summary>
         public Func<bool> IsLast;
+
+
+        /// <summary>
+        /// 擊倒瓶數
+        /// </summary>
+        public Func<int> Fall;
     }
 }
