@@ -32,9 +32,10 @@ namespace LyBowling.Lib
             _Throws = new Throw[_FrameCount * 2 + 1];
             _Frames = new Frame[_FrameCount];
             Frames = () => _Frames;
-            Source = () => _Frames.Where(m => m != null).Sum(m => m.Source());
             Frame = (index) => _Frames.ElementAtOrDefault(index);
+            Throws = () => _Throws;
             Throw = (index) => _Throws.ElementAtOrDefault(index);
+            Source = () => _Frames.Where(m => m != null).Sum(m => m.Source());
         }
         /// <summary>
         /// 計分格數量
@@ -97,8 +98,8 @@ namespace LyBowling.Lib
             newThrow.Previous = () => Throw(newThrow.Index() - 1);
             newThrow.Next = () => Throw(newThrow.Index() + 1);
             newThrow.IsSkip = () => (!newThrow.Frame().IsLast() && newThrow.Previous().IsStrike()) ||
-                                        (newThrow.IsLast() && newThrow.Frame().Fall() < 10);
-            newThrow.IsLast = () => newThrow.Index() == _Throws.Length - 1;
+                                        (newThrow.IsThree() && newThrow.Frame().Fall() < 10);
+            newThrow.IsThree = () => newThrow.Index() == _Throws.Length - 1;
             newThrow.IsFirst = () => !newThrow.IsThree() && (newThrow.Index() + 1) % 2 == 1;
             newThrow.IsSecond = () => !newThrow.IsThree() && (newThrow.Index() + 1) % 2 == 0;
             newThrow.IsThree = () => newThrow.Index() == _Throws.Length - 1;
@@ -113,7 +114,7 @@ namespace LyBowling.Lib
                 int index = newThrow.Index();
                 Throw next = null;
                 index++;
-                if (!newThrow.IsLast())
+                if (!newThrow.IsThree())
                 {
                     _Throws[index] = CreateThrow();
                     next = _Throws[index];
@@ -132,7 +133,7 @@ namespace LyBowling.Lib
             };
             newThrow.Start = () =>
             {
-                if (newThrow.IsSecond() || (newThrow.IsLast() && newThrow.Previous().After == 0))
+                if (newThrow.IsSecond() || (newThrow.IsThree() && newThrow.Previous().After == 0))
                 {
                     newThrow.After = newThrow.Previous().After;
                     newThrow.Before = newThrow.Previous().After;
@@ -145,32 +146,11 @@ namespace LyBowling.Lib
 
                 int source = newThrow.Fall ?? 0;
 
-                if (newThrow.IsStrike())
-                    source += newThrow.Extra(2);
-                else if (newThrow.IsSpare())
-                    source += newThrow.Extra(1);
+                if (!newThrow.Frame().IsLast() && newThrow.IsStrike())
+                    source +=_Throws.Skip(newThrow.Index()+1).Where(m=> m!=null && m.Fall.HasValue).Take(2).Sum(m=>m.Fall.Value);
+                else if (!newThrow.Frame().IsLast() && newThrow.IsSpare())
+                    source += _Throws.Skip(newThrow.Index() + 1).Where(m => m != null&& m.Fall.HasValue).Take(1).Sum(m => m.Fall.Value);
 
-                return source;
-            };
-            newThrow.Extra = (iCount) =>
-            {
-                if (newThrow.Frame().IsLast())
-                    return 0;
-                int source = 0;
-                int index = newThrow.Index();
-                for (int i = index + 1; i < _Throws.Length; i++)
-                {
-                    if (_Throws[i] == null)
-                        break;
-                    else if (_Throws[i].Fall.HasValue)
-                    {
-                        source += _Throws[i].Fall.Value;
-                        if (iCount > 1)
-                            iCount--;
-                        else
-                            break;
-                    }
-                }
                 return source;
             };
             return newThrow;
@@ -206,10 +186,6 @@ namespace LyBowling.Lib
             return frame;
         }
 
-        /// <summary>
-        /// 總分
-        /// </summary>
-        public Func<int> Source;
 
         /// <summary>
         /// 所有計分格 
@@ -221,8 +197,17 @@ namespace LyBowling.Lib
         /// </summary>
         public Func<int, Frame> Frame;
         /// <summary>
-        /// 
+        /// 所有丟球
+        /// </summary>
+        public Func<IEnumerable<Throw>> Throws;
+        /// <summary>
+        /// 某一球
         /// </summary>
         public Func<int, Throw> Throw;
+        /// <summary>
+        /// 總分
+        /// </summary>
+        public Func<int> Source;
+        
     }
 }

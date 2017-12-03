@@ -86,11 +86,7 @@ namespace LyBowling.Lib
         /// 是否為計分格第三球
         /// </summary>
         public Func<bool> IsThree;
-
-        /// <summary>
-        /// 是否為最後一球
-        /// </summary>
-        public Func<bool> IsLast;
+        
 
         /// <summary>
         /// 是否略過此球 
@@ -101,10 +97,7 @@ namespace LyBowling.Lib
         /// 分數
         /// </summary>
         public Func<int> Source;
-        /// <summary>
-        /// 附加分數
-        /// </summary>
-        public Func<int, int> Extra;
+
         
     }
 }

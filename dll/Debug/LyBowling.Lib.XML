@@ -92,11 +92,6 @@
             <param name="index"></param>
             <returns></returns>
         </member>
-        <member name="F:LyBowling.Lib.Game.Source">
-            <summary>
-            總分
-            </summary>
-        </member>
         <member name="F:LyBowling.Lib.Game.Frames">
             <summary>
             所有計分格 
@@ -107,9 +102,19 @@
             某個計分格
             </summary>
         </member>
+        <member name="F:LyBowling.Lib.Game.Throws">
+            <summary>
+            所有丟球
+            </summary>
+        </member>
         <member name="F:LyBowling.Lib.Game.Throw">
             <summary>
-            
+            某一球
+            </summary>
+        </member>
+        <member name="F:LyBowling.Lib.Game.Source">
+            <summary>
+            總分
             </summary>
         </member>
         <member name="T:LyBowling.Lib.Throw">
@@ -197,11 +202,6 @@
             是否為計分格第三球
             </summary>
         </member>
-        <member name="F:LyBowling.Lib.Throw.IsLast">
-            <summary>
-            是否為最後一球
-            </summary>
-        </member>
         <member name="F:LyBowling.Lib.Throw.IsSkip">
             <summary>
             是否略過此球 
@@ -210,11 +210,6 @@
         <member name="F:LyBowling.Lib.Throw.Source">
             <summary>
             分數
-            </summary>
-        </member>
-        <member name="F:LyBowling.Lib.Throw.Extra">
-            <summary>
-            附加分數
             </summary>
         </member>
     </members>

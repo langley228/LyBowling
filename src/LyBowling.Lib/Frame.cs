@@ -36,7 +36,6 @@ namespace LyBowling.Lib
         /// </summary>
         public Func<bool> IsLast;
 
-
         /// <summary>
         /// 擊倒瓶數
         /// </summary>
