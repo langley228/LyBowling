@@ -13,6 +13,13 @@
             margin: 0;
             padding: 0;
         }
+        .table > thead > tr > td {
+            text-align: center;
+            width: 20px;
+            height: 20px;
+            margin: 0;
+            padding: 0;
+        }
 
         .table > tbody > tr > th {
             text-align: center;
@@ -80,6 +87,63 @@ else
 <table class="table table-bordered">
     <thead>
         <tr>
+            <th>Before</th>
+            @foreach (var item in Model.Frames)
+            {
+                if (item != null)
+                {
+                    IEnumerable<LyBowling.Lib.Throw> trs = item.Throws();
+                    int iCout = trs?.Count() ?? 0;
+                    for (int i = 0; i < (3 - iCout); i++)
+                    {
+                        <td></td>
+                    }
+                    foreach (var tr in trs)
+                    {
+                        <td>@(tr?.Before)</td>
+                    }
+
+                }
+                else
+                {
+
+                    <td></td>
+                    <td></td>
+                    <td></td>
+
+                }
+            }
+        </tr>
+        <tr>
+            <th>After</th>
+            @foreach (var item in Model.Frames)
+            {
+                if (item != null)
+                {
+                    IEnumerable<LyBowling.Lib.Throw> trs = item.Throws();
+                    int iCout = trs?.Count() ?? 0;
+                    for (int i = 0; i < (3 - iCout); i++)
+                    {
+                        <td></td>
+                    }
+                    foreach (var tr in trs)
+                    {
+                        <td>@(tr?.After)</td>
+                    }
+
+                }
+                else
+                {
+
+                    <td></td>
+                    <td></td>
+                    <td></td>
+
+                }
+            }
+        </tr>
+        <tr>
+            <th>Frame</th>
             @for (int i = 0; i < Model.FrameCount; i++)
             {
                 <th colspan="3">
@@ -90,6 +154,7 @@ else
     </thead>
     <tbody>
         <tr>
+            <th>Fall</th>
             @foreach (var item in Model.Frames)
             {
                 if (item != null)
@@ -124,6 +189,7 @@ else
             }
         </tr>
         <tr>
+            <th>Source</th>
             @{
                 int isource = 0;
             }

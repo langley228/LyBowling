@@ -109,7 +109,12 @@ namespace LyBowling.Lib
             {
                 newThrow.Fall = fall;
                 if (fall.HasValue)
-                    newThrow.After = newThrow.Before - fall.Value;
+                {
+                    if (newThrow.Fall.Value > newThrow.Before)
+                        newThrow.Fall = newThrow.Before;
+
+                    newThrow.After = newThrow.Before - newThrow.Fall.Value;
+                }
 
                 int index = newThrow.Index();
                 Throw next = null;
@@ -133,7 +138,7 @@ namespace LyBowling.Lib
             };
             newThrow.Start = () =>
             {
-                if (newThrow.IsSecond() || (newThrow.IsThree() && newThrow.Previous().After == 0))
+                if (( newThrow.IsSecond() &&!newThrow.Previous().IsStrike()) || (newThrow.IsThree() && newThrow.Previous().After!=0))
                 {
                     newThrow.After = newThrow.Previous().After;
                     newThrow.Before = newThrow.Previous().After;

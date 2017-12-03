@@ -12,6 +12,35 @@ namespace LyBowling.Lib.Tests
     public class GameTests
     {
         [TestMethod()]
+        public void GetSource_270()
+        {
+            Game g = new Game(10);
+            Throw t1 = g.Start();
+            for (int i = 0; i < 9; i++)
+                t1= t1.Play(10);
+            t1 = t1.Play(9);
+            t1 = t1.Play(1);
+            t1 = t1.Play(1);
+            Assert.AreEqual(270, g.Source());
+        }
+        [TestMethod()]
+        public void GetSource_Before()
+        {
+            Game g = new Game(10);
+            Throw t1 = g.Start();
+            for (int i = 0; i < 9; i++)
+                t1 = t1.Play(10);
+            t1 = t1.Play(1);
+            t1 = t1.Play(9);
+            t1 = t1.Play(1);
+
+            if (g.Throw(20).Before != 10)
+                Assert.Fail();
+            if (g.Throw(20).After!=9)
+                Assert.Fail();
+
+        }
+        [TestMethod()]
         public void GetSource_Strike()
         {
             Game g = new Game(10);
@@ -91,7 +120,7 @@ namespace LyBowling.Lib.Tests
         }
 
         [TestMethod()]
-        public void GetSource_Sample_113()
+        public void GetSource_Sample_108()
         {
             Game g = new Game(10);
             Throw t = g.Start();
@@ -112,9 +141,9 @@ namespace LyBowling.Lib.Tests
             t = t.Play(6);
             t = t.Play(3);
             t = t.Play(7);
-            t = t.Play(8);
+            t = t.Play(3);
             t = t.Play(10);
-            if (g.Source() != 113)
+            if (g.Source() != 108)
                 Assert.Fail();
         }
         [TestMethod()]
@@ -145,7 +174,7 @@ namespace LyBowling.Lib.Tests
                 Assert.Fail();
         }
         [TestMethod()]
-        public void GetSource_Sample_128()
+        public void GetSource_Sample_126()
         {
             Game g = new Game(10);
             Throw t = g.Start();
@@ -168,13 +197,13 @@ namespace LyBowling.Lib.Tests
             t = t.Play(6);
             t = t.Play(4);
             t = t.Play(5);
+            t = t.Play(5);
             t = t.Play(7);
-            t = t.Play(7);
-            if (g.Source() != 128)
+            if (g.Source() != 126)
                 Assert.Fail();
         }
         [TestMethod()]
-        public void GetSource_Sample_100()
+        public void GetSource_Sample_99()
         {
             Game g = new Game(10);
             Throw t = g.Start();
@@ -196,9 +225,9 @@ namespace LyBowling.Lib.Tests
             t = t.Play(2);
             t = t.Play(2);
             t = t.Play(6);
-            t = t.Play(5);
+            t = t.Play(4);
             t = t.Play(6);
-            if (g.Source() != 100)
+            if (g.Source() != 99)
                 Assert.Fail();
         }
         [TestMethod()]
@@ -226,7 +255,7 @@ namespace LyBowling.Lib.Tests
                 Assert.Fail();
         }
         [TestMethod()]
-        public void GetSource_Sample_161()
+        public void GetSource_Sample_157()
         {
             Game g = new Game(10);
             Throw t = g.Start();
@@ -246,8 +275,8 @@ namespace LyBowling.Lib.Tests
             t = t.Play(6);
             t = t.Play(10);
             t = t.Play(7);
-            t = t.Play(7);
-            if (g.Source() != 161)
+            t = t.Play(3);
+            if (g.Source() != 157)
                 Assert.Fail();
         }
 
@@ -284,6 +313,30 @@ namespace LyBowling.Lib.Tests
             t = t.Play(7);
             t = t.Play(4);
             if (g.Source() != 76)
+            {
+                Assert.Fail();
+            }
+        }
+
+        [TestMethod()]
+        public void GetSource_Over()
+        {
+            Game g = new Game(10);
+            Throw t = g.Start();
+            for (int i = 0; i < 12; i++)
+            {
+                t = t.Play(40);
+            }
+            if (g.Source() != 300)
+            {
+                Assert.Fail();
+            }
+            t = g.ReSet();
+            for (int i = 0; i < 12; i++)
+            {
+                t = t.Play(40);
+            }
+            if (g.Source() != 300)
             {
                 Assert.Fail();
             }
