@@ -1,3 +1,3 @@
 # LyBowling
 保齡球Game
-http://lybowling.azurewebsites.net/
+https://goo.gl/WjpfGU
